@@ -219,7 +219,7 @@ async def captchaGet(
         return RedirectResponse("http://" + HOST)     
     return RedirectResponse("https://tsinglanstudent.schoolis.cn/api/MemberShip/GetStudentCaptchaForLogin")
 
-@app.post("/captcha/verify")
+@app.post("/captcha/verify/")
 async def captchaVerify(
     host: Annotated[str | None, Header()] = None,
     captcha: Annotated[str | None, Header()] = None,

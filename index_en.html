@@ -222,8 +222,8 @@
             },
             methods: {
                 async captchaVerify(captcha){
-                    const captcha_pic = '/captcha/'
-                    const captcha = {
+                    const cPost = '/captcha/verify/'
+                    const cReq = {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
@@ -238,7 +238,7 @@
                             return;
                         } 
                         this.captchaString = "Verifying captcha...";
-                        const verify = await fetch(url1, req0);
+                        const verify = await fetch(cPost, cReq);
                         const dataC = await verify.json();
                         console.log(dataC)
                     }
