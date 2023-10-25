@@ -96,6 +96,8 @@
                                 <div class="mb-3"><input class="form-control" v-model="captcha" type="text" name="captchaInput" placeholder="Captcha">
                                 </div>
                             </form>
+                            <div class="mb-3"></div><button class="btn btn-primary d-block w-100" type="button"
+                            v-if="scoreString != 'Captcha required'" @click="captchaVerify(captcha)">Submit Captcha</button>
                         </div>
                         <div class="mb-3"></div><button class="btn btn-primary d-block w-100" type="button"
                             v-if="scoreString != 'Processing...'" @click="fetchData(username,semesterID,percentage)">Fetch</button>
@@ -219,6 +221,32 @@
 
             },
             methods: {
+                async captchaVerify(captcha){
+                    const captcha_pic = '/captcha/'
+                    const captcha = {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            captcha: this.captchaString,
+                        })
+                    };
+                    try {
+                        if (this.captcha.length == 0) {
+                            this.captchaString = "Please enter the captcha";
+                            return;
+                        } 
+                        this.captchaString = "Verifying captcha...";
+                        const verify = await fetch(url1, req0);
+                        const dataC = await verify.json();
+                        console.log(dataC)
+                    }
+                    catch (error){
+                        console.error(error);
+                        this.captchaString = "Error:" + error;
+                    }
+                },
                 async fetchData() {
                     document.getElementById("score_table").innerHTML = "";
                     const url1 = '/new/'
@@ -231,7 +259,7 @@
                             username: this.username,
                             password: this.password,
                             sid: this.semesterID,
-                            per: this.percentage
+                            per: this.percentage,
                         })
                     };
                     try {
@@ -290,6 +318,7 @@
                                 "<table class=\"table\"><thead><tr><th>Subject</th><th>Score(#)</th><th>Level</th></tr></thead><tbody></tbody></table>"
                             document.getElementById("score_table").innerHTML = text
                         }  else if(data2["error_en"] == "captcha")  {
+                            this.scoreString = "Captcha required"
                             this.captcha = true;
                         }   else {
                             //Clean up the data

@@ -4,6 +4,7 @@ from pydantic import BaseModel
 import request
 import manipulate
 import fetch
+from captcha import captchaThis
 import json
 from typing import Annotated
 from ua_parser import user_agent_parser
@@ -22,10 +23,8 @@ class new(BaseModel):
     sid: int
     per: bool
 
-
 class uuid(BaseModel):
     uuid: str
-
 
 class fetch_st(BaseModel):
     password: str
@@ -210,6 +209,24 @@ async def create_item(
         r_data = {}
         r_data["state"] = "false ua"
     return r_data
+
+# Captcha process
+@app.get("/captcha/")
+async def captchaGet(
+    host: Annotated[str | None, Header()] = None,
+):   
+    if host != HOST:
+        return RedirectResponse("http://" + HOST)     
+    return RedirectResponse("https://tsinglanstudent.schoolis.cn/api/MemberShip/GetStudentCaptchaForLogin")
+
+@app.post("/captcha/verify")
+async def captchaVerify(
+    host: Annotated[str | None, Header()] = None,
+    captcha: Annotated[str | None, Header()] = None,
+):   
+    if host != HOST:
+        return RedirectResponse("http://" + HOST)     
+    return 
 
 
 @app.post("/fetch/")
