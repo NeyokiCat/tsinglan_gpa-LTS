@@ -4,7 +4,6 @@ from pydantic import BaseModel
 import request
 import manipulate
 import fetch
-from captcha import captchaThis
 import json
 from typing import Annotated
 from ua_parser import user_agent_parser
