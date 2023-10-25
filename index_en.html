@@ -88,6 +88,15 @@
                                 </div>
                             </div>
                         </lable>
+                        <div v-if="captcha === true" class="mb-3">
+                            <h5>Input the captcha</h5>
+                            <!-- Show Captcha Image -->
+                            <img src="">
+                            <form>
+                                <div class="mb-3"><input class="form-control" v-model="captcha" type="text" name="captchaInput" placeholder="Captcha">
+                                </div>
+                            </form>
+                        </div>
                         <div class="mb-3"></div><button class="btn btn-primary d-block w-100" type="button"
                             v-if="scoreString != 'Processing...'" @click="fetchData(username,semesterID,percentage)">Fetch</button>
                     </form>
@@ -96,6 +105,13 @@
             <div class="alert warning">
                 <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
                 <strong>Warning!</strong> Some grades are hidden by teachers, the calculated GPA may not be accurate.
+            </div>
+            <div v-if="captcha === true" class="container rounded shadow-sm main">
+                <div class="card">
+                    <div class="card-body text-center d-flex flex-column align-items-center">
+                        
+                    </div>
+                </div>
             </div>
             <h4 class="text-center">Result</h4>
             <div class="table-responsive" id="score_table">
@@ -187,7 +203,9 @@
                 scoreString: 'Waiting for request...',
                 password: '',
                 percentage: false,
-                options: []
+                options: [],
+                captcha: false,
+                captchaInput: ''
             },
             async mounted(){
                 //异步加载json数据
@@ -270,8 +288,10 @@
                             this.scoreString = data2['error_en'];
                             text =
                                 "<table class=\"table\"><thead><tr><th>Subject</th><th>Score(#)</th><th>Level</th></tr></thead><tbody></tbody></table>"
-                            document.getElementById("score_table").innerHTML = text;
-                        } else {
+                            document.getElementById("score_table").innerHTML = text
+                        }  else if(data2["error_en"] == "captcha")  {
+                            this.captcha = true;
+                        }   else {
                             //Clean up the data
                             delete data2.err;
                             delete data2.error_zh;
